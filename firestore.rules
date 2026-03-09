@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Règles pour la collection users
+    match /users/{userId} {
+      // Lecture: tout utilisateur authentifié peut lire les profils
+      allow read: if request.auth != null;
+      
+      // Création: tout utilisateur authentifié peut créer son profil
+      allow create: if request.auth != null;
+      
+      // Écriture: uniquement le propriétaire du profil
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Règles pour la collection bookings
+    match /bookings/{bookingId} {
+      // Lecture: tout utilisateur authentifié
+      allow read: if request.auth != null;
+      
+      // Création: tout utilisateur authentifié
+      allow create: if request.auth != null;
+      
+      // Mise à jour: tout utilisateur authentifié
+      allow update: if request.auth != null;
+      
+      // Suppression: tout utilisateur authentifié
+      allow delete: if request.auth != null;
+    }
+  }
+}
