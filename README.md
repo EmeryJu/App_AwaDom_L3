@@ -1,33 +1,33 @@
 # AWA DOM - Application de recherche d'aide ménagère
 
-## 📱 Présentation
+## Présentation
 
 AWA DOM est une application mobile qui facilite la mise en relation entre particuliers et aides ménagères au Sénégal. Elle permet de rechercher, filtrer et réserver des services d'aide ménagère en quelques clics.
 
-## ✨ Fonctionnalités principales
+## Fonctionnalités principales
 
 ### Pour les clients
-- 🔍 Recherche d'aides ménagères par compétences
-- 🗺️ Filtrage par localisation et tarif
-- 📅 Réservation avec sélection de date et créneau
-- 📋 Historique des réservations
-- 👤 Gestion du profil
+-  Recherche d'aides ménagères par compétences
+-  Filtrage par localisation et tarif
+-  Réservation avec sélection de date et créneau
+-  Historique des réservations
+-  Gestion du profil
 
 ### Pour les aides ménagères
-- 📝 Création de profil professionnel
-- 📸 Ajout de photo et compétences
-- 📬 Réception et gestion des demandes
-- ✅ Acceptation/Refus des réservations
-- ⏰ Gestion de la disponibilité
+-  Création de profil professionnel
+-  Ajout de photo et compétences
+-  Réception et gestion des demandes
+-  Acceptation/Refus des réservations
+-  Gestion de la disponibilité
 
-## 🛠️ Technologies
+## Technologies
 
 - **React Native** avec Expo
 - **TypeScript**
 - **Firebase** (Auth, Firestore, Cloud Messaging)
 - **React Navigation**
 
-## 📦 Installation
+## Installation
 
 ### Prérequis
 - Node.js (v18 ou supérieur)
@@ -82,7 +82,7 @@ npm start
 3. Accepter ou refuser les réservations
 4. Gérer son profil professionnel
 
-## 📂 Structure du projet
+## Structure du projet
 
 ```
 AwaDom/
@@ -109,17 +109,17 @@ AwaDom/
 └── package.json
 ```
 
-## 🔐 Sécurité
+## Sécurité
 
 - Authentification sécurisée via Firebase Auth
 - Données stockées dans Firestore avec règles de sécurité
 - Variables d'environnement pour les clés sensibles
 
-## 📄 Documentation
+## Documentation
 
 Consultez [DOCUMENTATION.md](./DOCUMENTATION.md) pour plus de détails techniques.
 
-## 🚀 Déploiement
+## Déploiement
 
 ### Android
 ```bash
@@ -131,10 +131,10 @@ expo build:android
 expo build:ios
 ```
 
-## 👥 Équipe
+## Équipe
 
 Projet de soutenance L3 - AWA DOM
 
-## 📝 Licence
+## Licence
 
 Ce projet est développé dans le cadre d'un projet académique.
