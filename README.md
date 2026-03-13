@@ -62,7 +62,7 @@ EXPO_PUBLIC_FIREBASE_APP_ID=votre_app_id
 npm start
 ```
 
-## 📱 Utilisation
+## Utilisation
 
 ### Inscription
 1. Ouvrir l'application
