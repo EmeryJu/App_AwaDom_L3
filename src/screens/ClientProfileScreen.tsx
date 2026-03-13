@@ -6,6 +6,9 @@ import {
   TextInput,
   Button,
   Alert,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
 } from "react-native";
 
 import { auth, db } from "../services/firebase";
@@ -46,7 +49,12 @@ const ClientProfileScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+    >
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
       <Text style={styles.logo}>Awa Dom</Text>
       <Text style={styles.title}>Mon Profil</Text>
 
@@ -65,7 +73,8 @@ const ClientProfileScreen = () => {
       />
 
       <Button title="Sauvegarder" onPress={save} />
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -73,7 +82,7 @@ export default ClientProfileScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     padding: 20,
   },
   logo: {

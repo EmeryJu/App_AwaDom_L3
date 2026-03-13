@@ -70,6 +70,13 @@ const HomeClientScreen = ({ navigation }: any) => {
         </TouchableOpacity>
       </View>
 
+      <TouchableOpacity
+        style={styles.subscriptionButton}
+        onPress={() => navigation.navigate("Subscription")}
+      >
+        <Text style={styles.subscriptionButtonText}>🎉 Abonnement Premium</Text>
+      </TouchableOpacity>
+
       <TextInput
         style={styles.search}
         placeholder="Compétence..."
@@ -165,6 +172,18 @@ const styles = StyleSheet.create({
   navButtonText: {
     color: "white",
     fontWeight: "bold",
+  },
+  subscriptionButton: {
+    backgroundColor: "#ffc107",
+    padding: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  subscriptionButtonText: {
+    color: "#000",
+    fontWeight: "bold",
+    fontSize: 15,
   },
   search: {
     borderWidth: 1,

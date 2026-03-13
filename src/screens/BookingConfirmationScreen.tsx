@@ -9,9 +9,16 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { auth, db } from "../services/firebase";
 import { addDoc, collection } from "firebase/firestore";
+import {
+  getCurrentLocation,
+  getAddressFromCoords,
+  LocationCoords,
+} from "../services/location";
 
 const BookingConfirmationScreen = ({ route, navigation }: any) => {
   const { helper } = route.params;
@@ -20,34 +27,65 @@ const BookingConfirmationScreen = ({ route, navigation }: any) => {
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [address, setAddress] = useState("");
+  const [location, setLocation] = useState<LocationCoords | null>(null);
+  const [loadingLocation, setLoadingLocation] = useState(false);
 
-  const confirmBooking = async () => {
+  const getLocation = async () => {
+    setLoadingLocation(true);
+    const coords = await getCurrentLocation();
+    
+    if (coords) {
+      setLocation(coords);
+      const addr = await getAddressFromCoords(coords.latitude, coords.longitude);
+      setAddress(addr);
+      Alert.alert("Succès", "Localisation récupérée !");
+    }
+    
+    setLoadingLocation(false);
+  };
+
+  const calculateHours = () => {
+    if (!startTime || !endTime) return 0;
+    
+    const [startH, startM] = startTime.split(":").map(Number);
+    const [endH, endM] = endTime.split(":").map(Number);
+    
+    const startMinutes = startH * 60 + startM;
+    const endMinutes = endH * 60 + endM;
+    
+    return Math.max(0, (endMinutes - startMinutes) / 60);
+  };
+
+  const confirmBooking = () => {
     if (!date || !startTime || !endTime) {
       Alert.alert("Erreur", "Veuillez remplir tous les champs");
       return;
     }
 
+    if (!address) {
+      Alert.alert("Erreur", "Veuillez entrer ou récupérer votre adresse");
+      return;
+    }
+
+    const hours = calculateHours();
+    if (hours <= 0) {
+      Alert.alert("Erreur", "L'heure de fin doit être après l'heure de début");
+      return;
+    }
+
     if (!user) return;
 
-    try {
-      await addDoc(collection(db, "bookings"), {
-        helperId: helper.id,
-        helperName: helper.name,
-        helperPhoto: helper.photoUrl,
-        clientId: user.uid,
-        clientName: user.email,
-        date: date,
-        startTime: startTime,
-        endTime: endTime,
-        status: "pending",
-        createdAt: new Date(),
-      });
-
-      Alert.alert("Succès", "Réservation confirmée !");
-      navigation.navigate("HomeClient");
-    } catch (error) {
-      Alert.alert("Erreur", "Impossible de créer la réservation");
-    }
+    // Naviguer vers l'écran de paiement
+    navigation.navigate("Payment", {
+      helper,
+      date,
+      startTime,
+      endTime,
+      hours,
+      address,
+      location,
+    });
   };
 
   return (
@@ -94,8 +132,42 @@ const BookingConfirmationScreen = ({ route, navigation }: any) => {
         onChangeText={setEndTime}
       />
 
+      <Text style={styles.sectionTitle}>Adresse :</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Entrez votre adresse"
+        value={address}
+        onChangeText={setAddress}
+        multiline
+      />
+
+      <TouchableOpacity
+        style={styles.locationButton}
+        onPress={getLocation}
+        disabled={loadingLocation}
+      >
+        {loadingLocation ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <>
+            <Text style={styles.locationIcon}>📍</Text>
+            <Text style={styles.locationButtonText}>
+              {location ? "Actualiser ma position" : "Utiliser ma position actuelle"}
+            </Text>
+          </>
+        )}
+      </TouchableOpacity>
+
+      {location && (
+        <View style={styles.locationInfo}>
+          <Text style={styles.locationText}>
+            ✓ Position enregistrée
+          </Text>
+        </View>
+      )}
+
       <View style={styles.buttonContainer}>
-        <Button title="Confirmer" onPress={confirmBooking} color="#28a745" />
+        <Button title="Continuer vers le paiement" onPress={confirmBooking} color="#28a745" />
       </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -151,5 +223,35 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 20,
     marginBottom: 30,
+  },
+  locationButton: {
+    backgroundColor: "#28a745",
+    padding: 12,
+    borderRadius: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  locationIcon: {
+    fontSize: 20,
+    marginRight: 8,
+  },
+  locationButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 15,
+  },
+  locationInfo: {
+    backgroundColor: "#d4edda",
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  locationText: {
+    color: "#155724",
+    fontSize: 14,
+    textAlign: "center",
   },
 });

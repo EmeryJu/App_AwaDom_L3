@@ -5,17 +5,14 @@ import {
   StyleSheet,
   FlatList,
   Image,
+  TouchableOpacity,
+  Linking,
 } from "react-native";
 
 import { auth, db } from "../services/firebase";
-import {
-  collection,
-  query,
-  where,
-  onSnapshot,
-} from "firebase/firestore";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 
-const ClientBookingsScreen = () => {
+const ClientBookingsScreen = ({ navigation }: any) => {
   const [bookings, setBookings] = useState<any[]>([]);
   const user = auth.currentUser;
 
@@ -66,18 +63,47 @@ const ClientBookingsScreen = () => {
             />
 
             <View style={{ flex: 1 }}>
-              <Text style={styles.name}>
-                {item.helperName}
-              </Text>
-              <Text>Date : {item.date}</Text>
+              <Text style={styles.name}>{item.helperName}</Text>
+              <Text>📅 {item.date}</Text>
+              {item.startTime && (
+                <Text>🕐 {item.startTime} - {item.endTime}</Text>
+              )}
+              {item.address && (
+                <Text style={styles.address}>📍 {item.address}</Text>
+              )}
+              {item.totalAmount && (
+                <Text style={styles.amount}>💰 {item.totalAmount} FCFA</Text>
+              )}
               <Text
                 style={{
                   color: statusColor(item.status),
                   fontWeight: "bold",
+                  marginTop: 4,
                 }}
               >
                 {statusText(item.status)}
               </Text>
+
+              <View style={styles.buttonRow}>
+                {item.location && (
+                  <TouchableOpacity
+                    style={styles.mapButton}
+                    onPress={() => {
+                      const url = `https://www.google.com/maps?q=${item.location.latitude},${item.location.longitude}`;
+                      Linking.openURL(url);
+                    }}
+                  >
+                    <Text style={styles.mapButtonText}>🗺️ Carte</Text>
+                  </TouchableOpacity>
+                )}
+
+                <TouchableOpacity
+                  style={styles.receiptButton}
+                  onPress={() => navigation.navigate("Receipt", { booking: item })}
+                >
+                  <Text style={styles.receiptButtonText}>🧾 Reçu</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         )}
@@ -107,7 +133,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 10,
     marginBottom: 10,
-    alignItems: "center",
+    alignItems: "flex-start",
   },
   avatar: {
     width: 60,
@@ -118,5 +144,42 @@ const styles = StyleSheet.create({
   name: {
     fontWeight: "bold",
     fontSize: 16,
+    marginBottom: 4,
+  },
+  address: {
+    fontSize: 13,
+    color: "#555",
+    marginTop: 2,
+  },
+  amount: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#28a745",
+    marginTop: 2,
+  },
+  buttonRow: {
+    flexDirection: "row",
+    marginTop: 8,
+    gap: 8,
+  },
+  mapButton: {
+    backgroundColor: "#007bff",
+    padding: 6,
+    borderRadius: 5,
+  },
+  mapButtonText: {
+    color: "#fff",
+    fontSize: 13,
+    fontWeight: "bold",
+  },
+  receiptButton: {
+    backgroundColor: "#28a745",
+    padding: 6,
+    borderRadius: 5,
+  },
+  receiptButtonText: {
+    color: "#fff",
+    fontSize: 13,
+    fontWeight: "bold",
   },
 });

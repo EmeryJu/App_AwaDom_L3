@@ -15,6 +15,9 @@ import HelperProfileScreen from "../screens/HelperProfileScreen";
 
 import HelperDetailsScreen from "../screens/HelperDetailsScreen";
 import BookingConfirmationScreen from "../screens/BookingConfirmationScreen";
+import PaymentScreen from "../screens/PaymentScreen";
+import SubscriptionScreen from "../screens/SubscriptionScreen";
+import ReceiptScreen from "../screens/ReceiptScreen";
 
 import ClientBookingsScreen from "../screens/ClientBookingsScreen";
 
@@ -79,6 +82,24 @@ const AppNavigator = () => {
           name="BookingConfirmation"
           component={BookingConfirmationScreen}
           options={{ title: "Confirmation" }}
+        />
+
+        <Stack.Screen
+          name="Payment"
+          component={PaymentScreen}
+          options={{ title: "Paiement" }}
+        />
+
+        <Stack.Screen
+          name="Subscription"
+          component={SubscriptionScreen}
+          options={{ title: "Abonnement" }}
+        />
+
+        <Stack.Screen
+          name="Receipt"
+          component={ReceiptScreen}
+          options={{ title: "Reçu de paiement" }}
         />
 
         <Stack.Screen

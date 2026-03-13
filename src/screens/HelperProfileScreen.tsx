@@ -8,6 +8,8 @@ import {
   StyleSheet,
   ScrollView,
   Image,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { auth, db } from "../services/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
@@ -64,7 +66,12 @@ export default function HelperProfileScreen({ navigation }: any) {
   };
 
   return (
-    <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+    >
+      <ScrollView style={styles.container} keyboardShouldPersistTaps="handled">
       <Text style={styles.logo}>Awa Dom</Text>
       <Text style={styles.title}>Mon Profil Professionnel</Text>
 
@@ -135,7 +142,8 @@ export default function HelperProfileScreen({ navigation }: any) {
       >
         <Text style={{ color: "white" }}>Déconnexion</Text>
       </TouchableOpacity>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
